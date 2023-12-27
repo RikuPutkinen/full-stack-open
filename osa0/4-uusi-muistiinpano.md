@@ -1,6 +1,7 @@
+```mermaid
 sequenceDiagram
-    participant browser as b
-    participant server as s
+    participant b as browser
+    participant s as server
 
     b->>+s: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     s-->>-b: 302, Location: /notes
@@ -16,3 +17,4 @@ sequenceDiagram
 
     b->>+s: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     s-->>-b: 200, JSON file
+```
