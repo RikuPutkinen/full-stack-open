@@ -13,6 +13,16 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState([
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+  ])
 
   function random(n){
     const ans = Math.floor(Math.random() * n)
@@ -24,10 +34,23 @@ const App = () => {
     setSelected(random(anecdotes.length))
   }
 
+  function placeVote(index) {
+    const newArr = votes.map((count, i) => {
+      if (i === index) return count + 1
+      return count
+    })
+
+    setVotes(newArr)
+  }
+
   return (
     <div>
-      {anecdotes[selected]}
       <div>
+        <p>{anecdotes[selected]}</p>
+        <p>{votes[selected]} votes</p>
+      </div>
+      <div>
+        <button onClick={() => placeVote(selected)}>Vote</button>
         <button onClick={randomIndex}>Next anecdote</button>
       </div>
     </div>
