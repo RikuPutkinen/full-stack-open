@@ -1,5 +1,9 @@
 import { useState } from 'react'
 
+function round(num, decimals){
+  return Math.round(num * Math.pow(10,decimals)) / Math.pow(10, decimals)
+}
+
 function Button({ handleClick, text}){
   return (
     <button onClick={handleClick}>
@@ -9,12 +13,17 @@ function Button({ handleClick, text}){
 }
 
 function Statistics({ score }){
+  const { good, neutral, bad } = score
+  const total = good + neutral + bad
   return (
     <>
       <h2>Statistics</h2>
-      <p>Good: {score.good}</p>
-      <p>Neutral: {score.neutral}</p>
-      <p>Bad: {score.bad}</p>
+      <p>Good: {good}</p>
+      <p>Neutral: {neutral}</p>
+      <p>Bad: {bad}</p>
+      <p>All: {total}</p>
+      <p>Average: {round((good + (-1 * bad)) / total, 2)}</p>
+      <p>Postive: {round(good / total * 100, 2)} %</p>
     </>
   )
 }
