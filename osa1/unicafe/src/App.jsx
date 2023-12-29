@@ -14,7 +14,10 @@ function Button({ handleClick, text }){
 
 function StatisticLine({text, value}){
   return (
-    <p>{text}: {value}</p>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
@@ -38,12 +41,16 @@ function Statistics({ score }){
   return (
     <>
       <h2>Statistics</h2>
-      <StatisticLine text={"Good"} value={good} />
-      <StatisticLine text={"Neutral"} value={neutral} />
-      <StatisticLine text={"Bad"} value={bad} />
-      <StatisticLine text={"All"} value={total} />
-      <StatisticLine text={"Average"} value={round(average, 2)} />
-      <StatisticLine text={"Positive"} value={round(positive, 2) + " %"} />
+      <table>
+        <tbody>
+          <StatisticLine text={"Good"} value={good} />
+          <StatisticLine text={"Neutral"} value={neutral} />
+          <StatisticLine text={"Bad"} value={bad} />
+          <StatisticLine text={"All"} value={total} />
+          <StatisticLine text={"Average"} value={round(average, 2)} />
+          <StatisticLine text={"Positive"} value={round(positive, 2) + " %"} />
+        </tbody>
+      </table>
     </>
   )
 }
