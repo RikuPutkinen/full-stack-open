@@ -4,7 +4,7 @@ function round(num, decimals){
   return Math.round(num * Math.pow(10,decimals)) / Math.pow(10, decimals)
 }
 
-function Button({ handleClick, text}){
+function Button({ handleClick, text }){
   return (
     <button onClick={handleClick}>
       {text}
@@ -12,9 +12,17 @@ function Button({ handleClick, text}){
   )
 }
 
+function StatisticLine({text, value}){
+  return (
+    <p>{text}: {value}</p>
+  )
+}
+
 function Statistics({ score }){
   const { good, neutral, bad } = score
   const total = good + neutral + bad
+  const average = (good + (-1 * bad)) / total
+  const positive = good / total * 100
 
   if (
     good === 0 &&
@@ -30,12 +38,12 @@ function Statistics({ score }){
   return (
     <>
       <h2>Statistics</h2>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>All: {total}</p>
-      <p>Average: {round((good + (-1 * bad)) / total, 2)}</p>
-      <p>Postive: {round(good / total * 100, 2)} %</p>
+      <StatisticLine text={"Good"} value={good} />
+      <StatisticLine text={"Neutral"} value={neutral} />
+      <StatisticLine text={"Bad"} value={bad} />
+      <StatisticLine text={"All"} value={total} />
+      <StatisticLine text={"Average"} value={round(average, 2)} />
+      <StatisticLine text={"Positive"} value={round(positive, 2) + " %"} />
     </>
   )
 }
