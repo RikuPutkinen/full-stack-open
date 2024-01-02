@@ -24,9 +24,10 @@ function Content(props) {
   )
 }
 
-function Total(props) {
+function Total({ exercises }) {
+  const total = exercises.reduce((total, current) => total + current, 0)
   return (
-    <p>Number of exercises {props.exercises[0] + props.exercises[1] + props.exercises[2]}</p>
+    <p>Number of exercises: {total}</p>
   )
 }
 
