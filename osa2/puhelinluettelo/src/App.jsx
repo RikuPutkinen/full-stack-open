@@ -2,23 +2,27 @@ import { useState } from 'react'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas',
+      number: '3545654' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (newName === '') return
+    if (newName === '' || newNumber === '') return
     if (persons.findIndex(person => person.name === newName) !== -1) {
       alert(`${newName} is already added to the phonebook`)
       return
     }
     
     const newPerson = {
-      name: newName
+      name: newName,
+      number: newNumber
     }
     setPersons([...persons, newPerson])
     setNewName('')
+    setNewNumber('')
   }
 
   return (
@@ -29,6 +33,9 @@ const App = () => {
           name: <input value={newName} onChange={e => setNewName(e.target.value)}/>
         </div>
         <div>
+          number: <input type='tel' value={newNumber} onChange={e => setNewNumber(e.target.value)} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
@@ -37,7 +44,7 @@ const App = () => {
         {persons.map(person => {
           return (
             <li key={person.name}>
-              {person.name}
+              {person.name} {person.number}
             </li>
           )
         })}
