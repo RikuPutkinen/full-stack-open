@@ -9,6 +9,10 @@ const App = () => {
   function handleSubmit(e) {
     e.preventDefault()
     if (newName === '') return
+    if (persons.findIndex(person => person.name === newName) !== -1) {
+      alert(`${newName} is already added to the phonebook`)
+      return
+    }
     
     const newPerson = {
       name: newName
