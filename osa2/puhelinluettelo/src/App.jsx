@@ -1,12 +1,15 @@
 import { useState } from 'react'
+import Filter from './components/filter'
+import PersonForm from './components/person-form'
+import Persons from './components/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: '3545654' }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filterQuery, setFilterQuery] = useState('')
+
+  const filteredPeople = persons.filter(person => person.name.toLowerCase().includes(filterQuery.toLowerCase()))
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -28,27 +31,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={e => handleSubmit(e)}>
-        <div>
-          name: <input value={newName} onChange={e => setNewName(e.target.value)}/>
-        </div>
-        <div>
-          number: <input type='tel' value={newNumber} onChange={e => setNewNumber(e.target.value)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter query={filterQuery} onchange={e => setFilterQuery(e.target.value)} />
+      <h2>Add new</h2>
+      <PersonForm
+        handleSubmit={e => handleSubmit(e)}
+        name={newName}
+        nameChange={e => setNewName(e.target.value)}
+        number={newNumber}
+        numberChange={e => setNewNumber(e.target.value)}
+      />
       <h2>Numbers</h2>
-      <ul>
-        {persons.map(person => {
-          return (
-            <li key={person.name}>
-              {person.name} {person.number}
-            </li>
-          )
-        })}
-      </ul>
+      <Persons people={filteredPeople} />
     </div>
   )
 
