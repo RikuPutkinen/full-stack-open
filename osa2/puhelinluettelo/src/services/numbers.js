@@ -13,3 +13,9 @@ export function createNumber(url, data, cb) {
     .then(res => res.data)
     .then(cb)
 }
+
+export function deleteNumber(url, id, cb) {
+  axios
+    .delete(`${url}/${id}`)
+    .then(cb)
+}

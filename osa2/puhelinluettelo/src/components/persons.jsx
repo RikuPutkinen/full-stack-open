@@ -1,10 +1,11 @@
-export default function Persons({ people }) {
+export default function Persons({ people, handleClick }) {
   return (
     <ul>
       {people.map(person => {
         return (
           <li key={person.name}>
-            {person.name} {person.number}
+            <p>{person.name} {person.number}</p>
+            <button onClick={() => handleClick(person)}>Delete</button>
           </li>
         )
       })}

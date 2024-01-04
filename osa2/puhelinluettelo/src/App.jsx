@@ -3,7 +3,7 @@ import axios from 'axios'
 import Filter from './components/filter'
 import PersonForm from './components/person-form'
 import Persons from './components/persons'
-import { createNumber, getNumbers } from './services/numbers'
+import { createNumber, deleteNumber, getNumbers } from './services/numbers'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -35,6 +35,12 @@ const App = () => {
     setNewNumber('')
   }
 
+  function handleDelete(person) {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      deleteNumber('http://localhost:3001/persons', person.id, setPersons(persons.filter(p => p.id !== person.id)))
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -48,7 +54,7 @@ const App = () => {
         numberChange={e => setNewNumber(e.target.value)}
       />
       <h2>Numbers</h2>
-      <Persons people={filteredPeople} />
+      <Persons people={filteredPeople} handleClick={handleDelete} />
     </div>
   )
 }
