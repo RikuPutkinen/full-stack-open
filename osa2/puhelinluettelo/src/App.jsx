@@ -30,7 +30,11 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons([...persons, newPerson])
+
+    axios
+      .post('http://localhost:3001/persons', newPerson)
+      .then(res => setPersons([...persons, res.data]))
+    
     setNewName('')
     setNewNumber('')
   }
@@ -51,7 +55,6 @@ const App = () => {
       <Persons people={filteredPeople} />
     </div>
   )
-
 }
 
 export default App
