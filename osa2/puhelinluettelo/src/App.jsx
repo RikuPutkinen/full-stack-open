@@ -52,6 +52,10 @@ const App = () => {
             return p
           }))
           showMessage(`Updated ${newName}`, true)
+        },
+        () => {
+          showMessage(`${person.name} has already been deleted from server`, false)
+          setPersons(persons.filter(p => p.id !== person.id))
         }
       )
     }

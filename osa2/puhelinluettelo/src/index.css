@@ -4,3 +4,10 @@
   border-radius: 5px;
   background-color: lime;
 }
+
+.error {
+  padding: 0.25rem 0.5rem;
+  border: solid darkred 4px;
+  border-radius: 5px;
+  background-color: red;
+}
