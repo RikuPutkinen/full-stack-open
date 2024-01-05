@@ -1,21 +1,31 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/filter'
 import PersonForm from './components/person-form'
 import Persons from './components/persons'
 import { createNumber, deleteNumber, getNumbers, updateNumber } from './services/numbers'
+import { MessageBox } from './components/message-box'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterQuery, setFilterQuery] = useState('')
+  const [message, setMessage] = useState('')
+  const [success, setSuccess] = useState(true)
 
   useEffect(() => {
     getNumbers('http://localhost:3001/persons', data => setPersons(data))
   }, [])
 
   const filteredPeople = persons.filter(person => person.name.toLowerCase().includes(filterQuery.toLowerCase()))
+
+  function showMessage(message, success) {
+    setMessage(message)
+    setSuccess(success)
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -34,30 +44,48 @@ const App = () => {
         'http://localhost:3001/persons',
         person.id,
         newPerson,
-        data => setPersons(persons.map(p => {
-          console.log("person", p)
-          console.log('data', data)
-          if (p.id === data.id) return data
-          return p
-        }))
+        data => {
+          setPersons(persons.map(p => {
+            console.log("person", p)
+            console.log('data', data)
+            if (p.id === data.id) return data
+            return p
+          }))
+          showMessage(`Updated ${newName}`, true)
+        }
       )
     }
     else {
-      createNumber('http://localhost:3001/persons', newPerson, data => setPersons([...persons, data]))
+      createNumber(
+        'http://localhost:3001/persons',
+        newPerson,
+        data => {
+          setPersons([...persons, data])
+          showMessage(`Added ${newName}`, true)
+        })
     }
     setNewName('')
     setNewNumber('')
+
   }
 
   function handleDelete(person) {
     if (window.confirm(`Delete ${person.name}?`)) {
-      deleteNumber('http://localhost:3001/persons', person.id, setPersons(persons.filter(p => p.id !== person.id)))
+      deleteNumber(
+        'http://localhost:3001/persons',
+        person.id,
+        () => {
+          setPersons(persons.filter(p => p.id !== person.id))
+          showMessage(`Deleted ${person.name}`, true)
+        }      
+      )
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <MessageBox message={message} success={success} />
       <Filter query={filterQuery} onchange={e => setFilterQuery(e.target.value)} />
       <h2>Add new</h2>
       <PersonForm
