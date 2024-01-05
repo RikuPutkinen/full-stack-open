@@ -19,3 +19,10 @@ export function deleteNumber(url, id, cb) {
     .delete(`${url}/${id}`)
     .then(cb)
 }
+
+export function updateNumber(url, id, data, cb) {
+  axios
+    .put(`${url}/${id}`, data)
+    .then(res => res.data)
+    .then(cb)
+}

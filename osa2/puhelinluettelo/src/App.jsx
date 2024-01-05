@@ -3,7 +3,7 @@ import axios from 'axios'
 import Filter from './components/filter'
 import PersonForm from './components/person-form'
 import Persons from './components/persons'
-import { createNumber, deleteNumber, getNumbers } from './services/numbers'
+import { createNumber, deleteNumber, getNumbers, updateNumber } from './services/numbers'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -20,17 +20,31 @@ const App = () => {
   function handleSubmit(e) {
     e.preventDefault()
     if (newName === '' || newNumber === '') return
-    if (persons.findIndex(person => person.name === newName) !== -1) {
-      alert(`${newName} is already added to the phonebook`)
-      return
-    }
+    
+    const person = persons.find(person => person.name === newName) 
     
     const newPerson = {
       name: newName,
       number: newNumber
     }
-
-    createNumber('http://localhost:3001/persons', newPerson, data => setPersons([...persons, data]))
+    
+    if (person) {
+      window.confirm(`${person.name} is already added to the phonebook. Do you want replace it?`)
+      updateNumber(
+        'http://localhost:3001/persons',
+        person.id,
+        newPerson,
+        data => setPersons(persons.map(p => {
+          console.log("person", p)
+          console.log('data', data)
+          if (p.id === data.id) return data
+          return p
+        }))
+      )
+    }
+    else {
+      createNumber('http://localhost:3001/persons', newPerson, data => setPersons([...persons, data]))
+    }
     setNewName('')
     setNewNumber('')
   }
