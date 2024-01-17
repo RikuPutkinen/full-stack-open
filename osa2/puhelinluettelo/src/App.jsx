@@ -14,7 +14,7 @@ const App = () => {
   const [success, setSuccess] = useState(true)
 
   useEffect(() => {
-    getNumbers('http://localhost:3001/persons', data => setPersons(data))
+    getNumbers('/api/persons', data => setPersons(data))
   }, [])
 
   const filteredPeople = persons.filter(person => person.name.toLowerCase().includes(filterQuery.toLowerCase()))
@@ -41,7 +41,7 @@ const App = () => {
     if (person) {
       window.confirm(`${person.name} is already added to the phonebook. Do you want replace it?`)
       updateNumber(
-        'http://localhost:3001/persons',
+        '/api/persons',
         person.id,
         newPerson,
         data => {
@@ -61,22 +61,26 @@ const App = () => {
     }
     else {
       createNumber(
-        'http://localhost:3001/persons',
+        '/api/persons',
         newPerson,
         data => {
           setPersons([...persons, data])
           showMessage(`Added ${newName}`, true)
-        })
+        },
+        err => {
+          console.log(err)
+          showMessage(err.response.data.error, false)
+        }
+      )
     }
     setNewName('')
     setNewNumber('')
-
   }
 
   function handleDelete(person) {
     if (window.confirm(`Delete ${person.name}?`)) {
       deleteNumber(
-        'http://localhost:3001/persons',
+        '/api/persons',
         person.id,
         () => {
           setPersons(persons.filter(p => p.id !== person.id))

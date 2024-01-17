@@ -7,11 +7,12 @@ export function getNumbers(url, cb) {
     .then(cb)
 }
 
-export function createNumber(url, data, cb) {
+export function createNumber(url, data, cb, err) {
   axios
     .post(url, data)
     .then(res => res.data)
     .then(cb)
+    .catch(err)
 }
 
 export function deleteNumber(url, id, cb) {
