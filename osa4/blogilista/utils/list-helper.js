@@ -24,13 +24,27 @@ function mostBlogs(blogs) {
   for (const [key, value] of Object.entries(counted)) {
     authorList.push({author: key, blogs: value})
   }
-  
+
   return authorList.reduce((max, curr) => max.blogs < curr.blogs ? curr : max)
+}
+
+function mostLikes(blogs) {
+  if (blogs.length === 0) return null
+  const grouped = _.groupBy(blogs, (blog) => blog.author)
+  
+  const authorList = []
+  for (const [key, value] of Object.entries(grouped)) {
+    const totalLikes = value.reduce((acc, curr) => acc + curr.likes, 0)
+    authorList.push({author: key, likes: totalLikes})
+  }
+
+  return authorList.reduce((max, curr) => max.likes < curr.likes ? curr : max)
 }
 
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
