@@ -71,7 +71,7 @@ describe('mostBlogs', () => {
     expect(listHelper.mostBlogs(listWithOneBlog)).toEqual({ author: "Michael Chan", blogs: 1 })
   })
 
-  test('returns the author withthe most blogs in the list', () => {
+  test('returns the author with the most blogs in the list', () => {
     expect(listHelper.mostBlogs(listWithMultipleBlogs)).toEqual({ author: "Robert C. Martin", blogs: 3 })
   })
 })
