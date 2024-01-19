@@ -8,7 +8,14 @@ function totalLikes(blogs) {
     : blogs.reduce((acc, curr) => acc + curr.likes, 0)
 }
 
+function favoriteBlog(blogs) {
+  return blogs.length === 0
+    ? null
+    : blogs.reduce((max, curr) => max.likes < curr.likes ? curr : max)
+}
+
 module.exports = {
   dummy,
-  totalLikes
+  totalLikes,
+  favoriteBlog
 }
