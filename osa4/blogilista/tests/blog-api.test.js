@@ -100,6 +100,31 @@ describe('Blog API POST', () => {
   })
 })
 
+describe('Blog API DELETE', () => {
+  test('deletes the blog successfully when called with an existing id', async () => {
+    const blogs = await (await api.get('/api/blogs')).body
+    const firstBlog = blogs[0]
+
+    await api
+    .delete(`/api/blogs/${firstBlog.id}`)
+    .expect(204)
+
+    const blogsAfter = await (await api.get('/api/blogs')).body
+    expect(blogsAfter).toHaveLength(blogs.length - 1)
+
+    const titles = blogsAfter.map(b => b.title)
+    expect(titles).not.toContain(firstBlog.title)
+  })
+
+  test('responds with 204 if the id does not exist', async () => {
+    const id = await testHelper.nonExistentId()
+
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(204)
+  })
+})
+
 afterAll (async () => {
   await mongoose.connection.close()
 })
