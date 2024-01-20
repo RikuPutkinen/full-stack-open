@@ -74,6 +74,30 @@ describe('Blog API POST', () => {
     const res = await api.get('/api/blogs')
     expect(res.body[res.body.length - 1].likes).toBe(0)
   })
+
+  test('responds with 400 if no title is provided', async () => {
+    const noTitle = {
+      author: "Edsger W. Dijkstra",
+      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(noTitle)
+      .expect(400)
+  })
+
+  test('responds with 400 if no url is provided', async () => {
+    const noUrl = {
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(noUrl)
+      .expect(400)
+  })
 })
 
 afterAll (async () => {
