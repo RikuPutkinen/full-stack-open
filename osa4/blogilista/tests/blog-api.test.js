@@ -36,6 +36,29 @@ describe('Blog API GET', () => {
   })
 })
 
+describe('Blog API POST', () => {
+  test('adds a new blog to the database', async () => {
+    const newBlog = {
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes: 12,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const res = await api.get('/api/blogs')
+    const titles = res.body.map(b => b.title)
+
+    expect(res.body).toHaveLength(testHelper.initialBlogs.length + 1)
+    expect(titles).toContain(newBlog.title)
+  })
+})
+
 afterAll (async () => {
   await mongoose.connection.close()
 })
