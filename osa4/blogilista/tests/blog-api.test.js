@@ -125,6 +125,21 @@ describe('Blog API DELETE', () => {
   })
 })
 
+describe('Blog API PUT', () => {
+  test('updates the blog with the correct id', async () => {
+    const blogs = testHelper.initialBlogs
+    const firstBlog = blogs[0]
+    firstBlog.likes = 100
+
+    const res = await api
+      .put(`/api/blogs/${firstBlog._id}`)
+      .send(firstBlog)
+      .expect(200)
+
+    expect(res.body.likes).toBe(firstBlog.likes)
+  })
+})
+
 afterAll (async () => {
   await mongoose.connection.close()
 })
