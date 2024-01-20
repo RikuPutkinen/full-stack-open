@@ -51,10 +51,10 @@ describe('Blog API POST', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const res = await api.get('/api/blogs')
-    const titles = res.body.map(b => b.title)
+    const blogs = await testHelper.blogsInDb()
+    const titles = blogs.map(b => b.title)
 
-    expect(res.body).toHaveLength(testHelper.initialBlogs.length + 1)
+    expect(blogs).toHaveLength(testHelper.initialBlogs.length + 1)
     expect(titles).toContain(newBlog.title)
   })
 
@@ -71,8 +71,8 @@ describe('Blog API POST', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const res = await api.get('/api/blogs')
-    expect(res.body[res.body.length - 1].likes).toBe(0)
+      const blogs = await testHelper.blogsInDb()
+    expect(blogs[blogs.length - 1].likes).toBe(0)
   })
 
   test('responds with 400 if no title is provided', async () => {
@@ -102,14 +102,14 @@ describe('Blog API POST', () => {
 
 describe('Blog API DELETE', () => {
   test('deletes the blog successfully when called with an existing id', async () => {
-    const blogs = await (await api.get('/api/blogs')).body
+    const blogs = await testHelper.blogsInDb()
     const firstBlog = blogs[0]
 
     await api
     .delete(`/api/blogs/${firstBlog.id}`)
     .expect(204)
 
-    const blogsAfter = await (await api.get('/api/blogs')).body
+    const blogsAfter = await testHelper.blogsInDb()
     expect(blogsAfter).toHaveLength(blogs.length - 1)
 
     const titles = blogsAfter.map(b => b.title)
