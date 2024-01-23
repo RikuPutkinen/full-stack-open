@@ -42,6 +42,97 @@ describe('User API POST', () => {
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
   })
+
+  test('fails with a missing username', async () => {
+    const noUsername = {
+      name: "A",
+      password: "password"
+    }
+
+    const res = await api
+      .post('/api/users')
+      .send(noUsername)
+      .expect(400)
+
+    expect(res.body.error).toBe("User validation failed: username: Path `username` is required.")
+  })
+
+  test('fails with a missing password', async () => {
+    const noPassword = {
+      username: "ABC",
+      name: "A",
+    }
+
+    const res = await api
+      .post('/api/users')
+      .send(noPassword)
+      .expect(400)
+
+    expect(res.body.error).toBe("password missing")
+  })
+
+  test('fails when username is too short', async () => {
+    const shortUsername = {
+      username: "AB",
+      name: "A",
+      password: "password"
+    }
+
+    const res = await api
+      .post('/api/users')
+      .send(shortUsername)
+      .expect(400)
+
+    expect(res.body.error).toBe("User validation failed: username: Path `username` (`AB`) is shorter than the minimum allowed length (3).")
+  })
+
+  test('fails when password is too short', async () => {
+    const shortPassword = {
+      username: "ABC",
+      name: "A",
+      password: "pa"
+    }
+
+    const res = await api
+      .post('/api/users')
+      .send(shortPassword)
+      .expect(400)
+
+    expect(res.body.error).toBe("password must be at least 3 characters long")
+  })
+
+  test('fails when username already exists in the database', async () => {
+    const existingUsername = {
+      username: "admin",
+      name: "A",
+      password: "password"
+    }
+
+    const res = await api
+      .post('/api/users')
+      .send(existingUsername)
+      .expect(400)
+
+    expect(res.body.error).toBe("User validation failed: username: Error, expected `username` to be unique. Value: `admin`")
+  })
+
+  test('does not add invalid user to the database', async () => {
+    const usersAtStart = await testHelper.usersInDb()
+
+    const existingUsername = {
+      username: "admin",
+      name: "A",
+      password: "password"
+    }
+
+    await api
+      .post('/api/users')
+      .send(existingUsername)
+      .expect(400)
+
+    const usersAtEnd = await testHelper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
 })
 
 describe('User API GET', () => {
