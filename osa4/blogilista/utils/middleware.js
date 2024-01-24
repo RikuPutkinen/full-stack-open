@@ -12,7 +12,7 @@ function errorHandler(err, req, res, next) {
   }
   else if (err.name === "JsonWebTokenError") {
     return res
-      .status(400)
+      .status(401)
       .json({
         error: 'missing or invalid token'
       })
