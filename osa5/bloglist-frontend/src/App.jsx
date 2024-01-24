@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import login from './services/login'
 import BlogForm from './components/BlogForm'
+import MessageBox from './components/MessageBox'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +16,9 @@ const App = () => {
     author: '',
     url: ''
   })
+  const [message, setMessage] = useState('')
+  const [success, setSuccess] = useState(true)
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -45,6 +49,7 @@ const App = () => {
       localStorage.setItem('blogUser', JSON.stringify(user))
     } catch(err) {
       console.log(err)
+      showMessage("Wrong username or password", false)
     }
   }
 
@@ -63,17 +68,27 @@ const App = () => {
   function addBlog(e) {
     e.preventDefault()
     blogService.create(newBlog)
+    showMessage(`A new blog "${newBlog.title}" by ${newBlog.author} added`, true)
+    setBlogs([...blogs, newBlog])
     setNewBlog({
       title: '',
       author: '',
       url: ''
     })
-    setBlogs([...blogs, newBlog])
+  }
+
+  function showMessage(message, success) {
+    setMessage(message)
+    setSuccess(success)
+    setTimeout(() => {
+      setMessage('')
+    }, 5000)
   }
 
   if (user === null) {
     return (
       <>
+        <MessageBox message={message} success={success} />
         <h2>Log in</h2>
         <LoginForm 
           username={username}
@@ -88,6 +103,7 @@ const App = () => {
 
   return (
     <div>
+      <MessageBox message={message} success={success} />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={logOut}>Log out</button>
