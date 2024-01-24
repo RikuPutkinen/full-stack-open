@@ -128,7 +128,7 @@ describe('Blog API POST', () => {
       .expect(400)
   })
 
-  test('responds with 401 if token is not provided', async () => {
+  test('responds with 401 and does not add a new blog if token is not provided', async () => {
     const newBlog = {
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
@@ -141,6 +141,12 @@ describe('Blog API POST', () => {
       .send(newBlog)
       .expect(401)
       .expect('Content-Type', /application\/json/)
+
+    const blogs = await testHelper.blogsInDb()
+    expect(blogs).toHaveLength(testHelper.initialBlogs.length)
+
+    const titles = blogs.map(b => b.title)
+    expect(titles).not.toContain(newBlog.title)
   })
 })
 
