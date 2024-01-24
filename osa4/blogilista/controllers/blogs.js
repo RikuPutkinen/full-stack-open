@@ -5,14 +5,6 @@ const jwt = require('jsonwebtoken')
 const config = require('../utils/config')
 const { log } = require('../utils/logger')
 
-function getToken(req) {
-  const authorization = req.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.split(' ')[1]
-  }
-  return null
-}
-
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
@@ -27,7 +19,7 @@ blogRouter.post('/', async (request, response, next) => {
   const { title, author, url, likes } = request.body
   let decodedToken
   try {
-    decodedToken = jwt.verify(getToken(request), config.SECRET)
+    decodedToken = jwt.verify(request.token, config.SECRET)
   }
   catch(err){
     next(err)

@@ -19,6 +19,17 @@ function errorHandler(err, req, res, next) {
   }
 }
 
+function tokenExtractor(req, res, next) {
+  const authorization = req.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    req.token = authorization.split(' ')[1]
+  } else {
+    req.token = null
+  }
+  next()
+}
+
 module.exports = {
-  errorHandler
+  errorHandler,
+  tokenExtractor
 }
