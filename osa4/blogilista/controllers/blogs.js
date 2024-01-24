@@ -4,6 +4,7 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const config = require('../utils/config')
 const { log } = require('../utils/logger')
+const middleware = require('../utils/middleware')
 
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -15,90 +16,69 @@ blogRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogRouter.post('/', async (request, response, next) => {
-  const { title, author, url, likes } = request.body
-  let decodedToken
-  try {
-    decodedToken = jwt.verify(request.token, config.SECRET)
-  }
-  catch(err){
-    next(err)
-    return 
-  }
+blogRouter.post('/',
+  middleware.userExtractor,
+  async (request, response, next) => {
+    const { title, author, url, likes } = request.body
+    const user = request.user
 
-  if (!decodedToken.id) {
-    return response
-      .status(401)
-      .json({
-        error: 'invalid token'
-      })
-  }
+    if (!title) {
+      return response
+        .status(400)
+        .json({
+          error: 'title missing'
+        })
+      }
+    if (!url) {
+      return response
+        .status(400)
+        .json({
+          error: 'url missing'
+        })
+      }
 
-  const user = await User.findById(decodedToken.id)
-
-  if (!title) {
-    return response
-      .status(400)
-      .json({
-        error: 'title missing'
-      })
+    const newBlog = {
+      title,
+      author,
+      url,
+      likes: likes || 0,
+      user: user._id
     }
-  if (!url) {
-    return response
-      .status(400)
-      .json({
-        error: 'url missing'
-      })
+    const blog = new Blog(newBlog)
+    
+    const result = await blog.save()
+    user.blogs = [...user.blogs, result._id]
+    await user.save()
+    response.status(201).json(result)
+  }
+)
+
+blogRouter.delete('/:id',
+  middleware.userExtractor,
+  async (request, response, next) => {
+    const user = request.user
+    const blog = await Blog.findById(request.params.id)
+
+    if (blog === null) {
+      return response
+        .status(204)
+        .end()
     }
 
-  const newBlog = {
-    title,
-    author,
-    url,
-    likes: likes || 0,
-    user: user._id
+    if (blog.user.toString() === user.id.toString()) {
+      await Blog.findByIdAndDelete(request.params.id)
+      return response
+        .status(204)
+        .end()
+    } else {
+      return response
+        .status(401)
+        .json({
+          error: 'invalid permissions'
+        })
+    }
   }
-  const blog = new Blog(newBlog)
-  
-  const result = await blog.save()
-  user.blogs = [...user.blogs, result._id]
-  await user.save()
-  response.status(201).json(result)
-})
-
-blogRouter.delete('/:id', async (request, response, next) => {
-  let decodedToken
-  try {
-    decodedToken = jwt.verify(request.token, config.SECRET)
-  }
-  catch(err){
-    next(err)
-    return 
-  }
-
-  if (!decodedToken.id) {
-    return response
-      .status(401)
-      .json({
-        error: 'invalid token'
-      })
-  }
-
-  const user = await User.findById(decodedToken.id)
-  const blog = await Blog.findById(request.params.id)
-  if (blog.user.toString() === user.id.toString()) {
-    await Blog.findByIdAndDelete(request.params.id)
-    return response
-      .status(204)
-      .end()
-  } else {
-    return response
-      .status(401)
-      .json({
-        error: 'invalid permissions'
-      })
-  }
-})
+)
 
 blogRouter.put('/:id', async (request, response) => {
   const blog = request.body
