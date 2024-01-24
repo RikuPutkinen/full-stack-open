@@ -16,6 +16,14 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const userJSON = localStorage.getItem('blogUser')
+    if (userJSON) {
+      const user = JSON.parse(userJSON)
+      setUser(user)
+    }
+  }, [])
+
   async function handleSubmit(e) {
     e.preventDefault()
 
@@ -24,9 +32,15 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      localStorage.setItem('blogUser', JSON.stringify(user))
     } catch(err) {
       console.log(err)
     }
+  }
+
+  function logOut() {
+    localStorage.removeItem('blogUser')
+    setUser(null)
   }
 
   if (user === null) {
@@ -48,6 +62,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
+      <button onClick={logOut}>Log out</button>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
