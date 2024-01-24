@@ -3,14 +3,35 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const testHelper = require('./test-helper')
+const User = require('../models/user')
+const bcrypt = require('bcryptjs')
 
 const api = supertest(app)
 
+beforeAll( async () => {
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash(testHelper.testUserCredentials.password, 10)
+  const user = new User({
+    username: testHelper.testUserCredentials.username,
+    name: testHelper.testUserCredentials.name,
+    passwordHash
+  })
+
+  await user.save()
+})
+
 beforeEach(async () => {
   await Blog.deleteMany({})
+  const user = await User.findOne({
+    username: testHelper.testUserCredentials.username
+  })
   
   for (const blog of testHelper.initialBlogs){
-    const blogObject = new Blog(blog)
+    const blogObject = new Blog({
+      ...blog,
+      user: user._id
+    })
     await blogObject.save()
   }
 })
@@ -44,10 +65,12 @@ describe('Blog API POST', () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
     }
+    const token = await testHelper.getTestToken(api)
 
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set("Authorization", `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -64,10 +87,12 @@ describe('Blog API POST', () => {
       author: "Edsger W. Dijkstra",
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
     }
+    const token = await testHelper.getTestToken(api)
 
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set("Authorization", `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -80,10 +105,12 @@ describe('Blog API POST', () => {
       author: "Edsger W. Dijkstra",
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
     }
+    const token = await testHelper.getTestToken(api)
 
     await api
       .post('/api/blogs')
       .send(noTitle)
+      .set("Authorization", `Bearer ${token}`)
       .expect(400)
   })
 
@@ -92,11 +119,28 @@ describe('Blog API POST', () => {
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
     }
+    const token = await testHelper.getTestToken(api)
 
     await api
       .post('/api/blogs')
       .send(noUrl)
+      .set("Authorization", `Bearer ${token}`)
       .expect(400)
+  })
+
+  test('responds with 401 if token is not provided', async () => {
+    const newBlog = {
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes: 12,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
   })
 })
 
@@ -104,9 +148,11 @@ describe('Blog API DELETE', () => {
   test('deletes the blog successfully when called with an existing id', async () => {
     const blogs = await testHelper.blogsInDb()
     const firstBlog = blogs[0]
+    const token = await testHelper.getTestToken(api)
 
     await api
     .delete(`/api/blogs/${firstBlog.id}`)
+    .set("Authorization", `Bearer ${token}`)
     .expect(204)
 
     const blogsAfter = await testHelper.blogsInDb()
@@ -118,10 +164,22 @@ describe('Blog API DELETE', () => {
 
   test('responds with 204 if the id does not exist', async () => {
     const id = await testHelper.nonExistentId()
+    const token = await testHelper.getTestToken(api)
 
     await api
       .delete(`/api/blogs/${id}`)
+      .set("Authorization", `Bearer ${token}`)
       .expect(204)
+  })
+
+  test('responds with 401 if token is not provided', async () => {
+    const blogs = await testHelper.blogsInDb()
+    const firstBlog = blogs[0]
+
+    await api
+    .delete(`/api/blogs/${firstBlog.id}`)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
   })
 })
 

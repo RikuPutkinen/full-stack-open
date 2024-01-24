@@ -20,6 +20,13 @@ const initialBlogs = [
   }
 ]
 
+
+const testUserCredentials = {
+  username: 'test',
+  name: 'test',
+  password: 'test'
+}
+
 async function blogsInDb() {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
@@ -44,9 +51,22 @@ async function usersInDb() {
   return users.map(u => u.toJSON())
 }
 
+async function getTestToken(api) {
+  const res = await api
+    .post('/api/login')
+    .send({
+      username: testUserCredentials.username,
+      password: testUserCredentials.password
+    })
+  
+    return res.body.token
+}
+
 module.exports = {
   initialBlogs,
+  testUserCredentials,
   blogsInDb,
   nonExistentId,
-  usersInDb
+  usersInDb,
+  getTestToken
 }
