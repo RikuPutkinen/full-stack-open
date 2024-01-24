@@ -10,6 +10,13 @@ function errorHandler(err, req, res, next) {
         error: err.message
       })
   }
+  else if (err.name === "JsonWebTokenError") {
+    return res
+      .status(400)
+      .json({
+        error: 'missing or invalid token'
+      })
+  }
 }
 
 module.exports = {

@@ -1,5 +1,19 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkExMiIsImlkIjoiNjViMDQxMjc5NjhlMDkxZTI4NDE4NDk2IiwiaWF0IjoxNzA2MDUyMDIxfQ.PbT4nja446quwnJl9w99KifiSGu3eWTV9f3OLW-US9s
+
+{
+    "title": "dfdfsdsfgdgs",
+    "author": "sdsasad",
+    "url": "dffdfdsfds",
+    "likes": 2344
+}
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkExMiIsImlkIjoiNjViMDQxMjc5NjhlMDkxZTI4NDE4NDk2IiwiaWF0IjoxNzA2MDUyMDIxfQ.PbT4nja446quwnJl9w99KifiSGu3eWTV9f3OLW-US9s
 
 {
     "title": "dfdfsdsfgdgs",
