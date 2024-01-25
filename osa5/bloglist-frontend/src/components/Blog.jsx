@@ -1,6 +1,8 @@
 import { useState } from "react"
+import blogservice from '../services/blogs'
 
 const Blog = ({ blog }) => {
+  const [likes, setlikes] = useState(blog.likes)
   const [showFull, setShowFull] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -10,6 +12,15 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
   
+  function handleLike(blog) {
+    console.log("L:", likes)
+    blogservice
+      .like({
+        ...blog,
+        likes: likes
+      })
+      .then(res => setlikes(res.likes))
+  }
 
   if (!showFull) { 
     return (
@@ -26,8 +37,8 @@ const Blog = ({ blog }) => {
     <div style={blogStyle}>
       <button onClick={() => setShowFull(false)}>hide</button>
       <p>{blog.title} {blog.author}</p>
-      <p>{blog.url}</p>
-      <p>likes {blog.likes} <button>like</button></p>
+      <p><a href={blog.url}>{blog.url}</a></p>
+      <p>likes {likes} <button onClick={() => handleLike(blog)}>like</button></p>
       <p>{blog.user.name}</p>
     </div>
   )
