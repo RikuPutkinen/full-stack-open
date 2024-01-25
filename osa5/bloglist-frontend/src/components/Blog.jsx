@@ -25,7 +25,7 @@ const Blog = ({ blog }) => {
   return (
     <div style={blogStyle}>
       <button onClick={() => setShowFull(false)}>hide</button>
-      <p>{blog.title}</p>
+      <p>{blog.title} {blog.author}</p>
       <p>{blog.url}</p>
       <p>likes {blog.likes} <button>like</button></p>
       <p>{blog.user.name}</p>
