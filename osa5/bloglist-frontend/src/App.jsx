@@ -13,11 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
   const [message, setMessage] = useState('')
   const [success, setSuccess] = useState(true)
 
@@ -60,24 +55,14 @@ const App = () => {
     setUser(null)
   }
 
-  function handleNewBlogChange(e) {
-    setNewBlog({
-      ...newBlog,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  function addBlog(e) {
-    e.preventDefault()
-    blogService.create(newBlog)
-    showMessage(`A new blog "${newBlog.title}" by ${newBlog.author} added`, true)
-    setBlogs([...blogs, newBlog])
-    setBlogFormVisible(false)
-    setNewBlog({
-      title: '',
-      author: '',
-      url: ''
-    })
+  function addBlog(newBlog) {
+    blogService
+      .create(newBlog)
+      .then(res => {
+        showMessage(`A new blog "${res.title}" by ${res.author} added`, true)
+        setBlogs([...blogs, res])
+        setBlogFormVisible(false)
+      })
   }
 
   function showMessage(message, success) {
@@ -117,9 +102,7 @@ const App = () => {
         handleShow={() => setBlogFormVisible(true)}
       >
         <BlogForm
-          newBlog={newBlog}
-          handleChange={handleNewBlogChange}
-          handleSubmit={addBlog}
+          createBlog={addBlog}
         />
       </Togglable>
       {blogs.map(blog =>

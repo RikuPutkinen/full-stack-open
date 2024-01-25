@@ -1,6 +1,31 @@
-export default function BlogForm({ newBlog, handleChange, handleSubmit }) {
+import { useState } from "react"
+
+export default function BlogForm({ createBlog }) {
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    author: '',
+    url: ''
+  })
+
+  function handleNewBlogChange(e) {
+    setNewBlog({
+      ...newBlog,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  function addBlog(e) {
+    e.preventDefault()
+    createBlog(newBlog)
+    setNewBlog({
+      title: '',
+      author: '',
+      url: ''
+    })
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={addBlog}>
       <h3>Create new</h3>
       <div>
         <label htmlFor="title">title:</label>
@@ -8,7 +33,7 @@ export default function BlogForm({ newBlog, handleChange, handleSubmit }) {
           id="title"
           name="title"
           value={newBlog.title}
-          onChange={handleChange}
+          onChange={handleNewBlogChange}
         />
       </div>      
       <div>
@@ -17,7 +42,7 @@ export default function BlogForm({ newBlog, handleChange, handleSubmit }) {
           id="author"
           name="author"
           value={newBlog.author}
-          onChange={handleChange}
+          onChange={handleNewBlogChange}
         />
       </div>      
       <div>
@@ -26,7 +51,7 @@ export default function BlogForm({ newBlog, handleChange, handleSubmit }) {
           id="url"
           name="url"
           value={newBlog.url}
-          onChange={handleChange}
+          onChange={handleNewBlogChange}
         />
       </div>
       <button>create</button>
