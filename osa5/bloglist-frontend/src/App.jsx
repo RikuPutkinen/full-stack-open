@@ -66,6 +66,16 @@ const App = () => {
       })
   }
 
+  function deleteBlog(blogToRemove) {
+    if (confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
+      blogService
+        .deleteBlog(blogToRemove.id)
+        .then(res => {
+          setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+        })
+    }
+  }
+
   function showMessage(message, success) {
     setMessage(message)
     setSuccess(success)
@@ -107,7 +117,7 @@ const App = () => {
         />
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} user={user} handleDelete={() => deleteBlog(blog)} />
       )}
     </div>
   )

@@ -49,9 +49,19 @@ async function like(blog) {
   return res.data
 }
 
+async function deleteBlog(id) {
+  const config = {
+    headers: { Authorization: token}
+  }
+
+  const res = await axios.delete(`${baseUrl}/${id}`, config)
+  return res
+}
+
 export default { 
   getAll,
   setToken,
   create,
-  like
+  like,
+  deleteBlog
 }
