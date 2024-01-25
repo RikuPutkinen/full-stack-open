@@ -1,6 +1,7 @@
 export default function BlogForm({ newBlog, handleChange, handleSubmit }) {
   return (
     <form onSubmit={handleSubmit}>
+      <h3>Create new</h3>
       <div>
         <label htmlFor="title">title:</label>
         <input
