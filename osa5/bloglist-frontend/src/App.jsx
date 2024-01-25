@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const App = () => {
 
     try {
       const user = await login({ username, password })
-      
+
       setUser(user)
       setUsername('')
       setPassword('')
@@ -47,7 +47,7 @@ const App = () => {
       localStorage.setItem('blogUser', JSON.stringify(user))
     } catch(err) {
       console.log(err)
-      showMessage("Wrong username or password", false)
+      showMessage('Wrong username or password', false)
     }
   }
 
@@ -89,7 +89,7 @@ const App = () => {
       <>
         <MessageBox message={message} success={success} />
         <h2>Log in</h2>
-        <LoginForm 
+        <LoginForm
           username={username}
           setUsername={setUsername}
           password={password}
@@ -108,7 +108,7 @@ const App = () => {
       <button onClick={logOut}>Log out</button>
       <Togglable
         visible={blogFormVisible}
-        buttonLabel={"new blog"}
+        buttonLabel={'new blog'}
         handleHide={() => setBlogFormVisible(false)}
         handleShow={() => setBlogFormVisible(true)}
       >

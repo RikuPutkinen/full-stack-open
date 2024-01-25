@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogservice from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, user, handleDelete }) => {
   const [likes, setlikes] = useState(blog.likes)
@@ -11,9 +12,9 @@ const Blog = ({ blog, user, handleDelete }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   function handleLike(blog) {
-    console.log("L:", likes)
+    console.log('L:', likes)
     blogservice
       .like({
         ...blog,
@@ -22,7 +23,7 @@ const Blog = ({ blog, user, handleDelete }) => {
       .then(res => setlikes(res.likes))
   }
 
-  if (!showFull) { 
+  if (!showFull) {
     return (
       <div style={blogStyle}>
         <p>
@@ -43,6 +44,12 @@ const Blog = ({ blog, user, handleDelete }) => {
       {user.username === blog.user.username && <button onClick={handleDelete}>remove</button>}
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired
 }
 
 export default Blog

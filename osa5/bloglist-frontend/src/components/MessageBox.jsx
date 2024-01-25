@@ -1,3 +1,5 @@
+import Proptypes from 'prop-types'
+
 export default function MessageBox({ message, success }) {
   if (!message) return null
 
@@ -6,4 +8,9 @@ export default function MessageBox({ message, success }) {
       <p>{message}</p>
     </div>
   )
+}
+
+MessageBox.propTypes = {
+  message: Proptypes.string.isRequired,
+  success: Proptypes.bool.isRequired
 }
