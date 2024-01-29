@@ -59,3 +59,34 @@ test('renders title, author, url, likes and user after "show" button is pressed'
   const likesRow = screen.getByText('likes 1')
   const userRow = screen.getByText('E')
 })
+
+test('like handler is called twice when like button is called twice', async () => {
+  const blog = {
+    title: 'A',
+    author: 'B',
+    url: 'C',
+    likes: 1,
+    user: {
+      username: 'D',
+      name: 'E'
+    }
+  }
+
+  const user = {
+    username: 'D',
+    name: 'E'
+  }
+
+  const likeHandler = jest.fn()
+
+  render(<Blog blog={blog} user={user} handleLike={likeHandler}/>)
+
+  const showButton = screen.getByText('show')
+  await userEvent.click(showButton)
+
+  const likeButton = screen.getByText('like')
+  await userEvent.click(likeButton)
+  await userEvent.click(likeButton)
+
+  expect(likeHandler.mock.calls).toHaveLength(2)
+})

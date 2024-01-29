@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import blogservice from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, user, handleDelete }) => {
-  const [likes, setlikes] = useState(blog.likes)
+const Blog = ({ blog, user, handleDelete, handleLike }) => {
   const [showFull, setShowFull] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -11,16 +9,6 @@ const Blog = ({ blog, user, handleDelete }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
-  }
-
-  function handleLike(blog) {
-    console.log('L:', likes)
-    blogservice
-      .like({
-        ...blog,
-        likes: likes
-      })
-      .then(res => setlikes(res.likes))
   }
 
   if (!showFull) {
@@ -39,7 +27,7 @@ const Blog = ({ blog, user, handleDelete }) => {
       <button onClick={() => setShowFull(false)}>hide</button>
       <p>{blog.title} {blog.author}</p>
       <p><a href={blog.url}>{blog.url}</a></p>
-      <p>likes {likes} <button onClick={() => handleLike(blog)}>like</button></p>
+      <p>likes {blog.likes} <button onClick={handleLike}>like</button></p>
       <p>{blog.user.name}</p>
       {user.username === blog.user.username && <button onClick={handleDelete}>remove</button>}
     </div>
@@ -49,7 +37,8 @@ const Blog = ({ blog, user, handleDelete }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  handleDelete: PropTypes.func.isRequired,
+  handleLike: PropTypes.func.isRequired,
 }
 
 export default Blog

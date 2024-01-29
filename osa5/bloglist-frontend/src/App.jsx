@@ -76,6 +76,21 @@ const App = () => {
     }
   }
 
+  function likeBlog(blogToLike) {
+    console.log('L:', blogToLike.likes)
+    blogService
+      .like(blogToLike)
+      .then(res => setBlogs(
+        blogs.map(blog => {
+          if (blog.id.toString() === blogToLike.id.toString()) {
+            return res
+          } else {
+            return blog
+          }
+        })
+      ))
+  }
+
   function showMessage(message, success) {
     setMessage(message)
     setSuccess(success)
@@ -117,7 +132,7 @@ const App = () => {
         />
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} handleDelete={() => deleteBlog(blog)} />
+        <Blog key={blog.id} blog={blog} user={user} handleDelete={() => deleteBlog(blog)} handleLike={() => likeBlog(blog)} />
       )}
     </div>
   )
