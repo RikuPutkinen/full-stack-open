@@ -1,13 +1,20 @@
-const user = {
+const user1 = {
   name: 'A',
   username: 'AAA',
+  password: 'BBB'
+}
+
+const user2 = {
+  name: 'B',
+  username: 'BBB',
   password: 'BBB'
 }
 
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/api/testing/reset`)
-    cy.request('POST', `${Cypress.env('BACKEND')}/api/users`, user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/api/users`, user1)
+    cy.request('POST', `${Cypress.env('BACKEND')}/api/users`, user2)
     cy.visit('')
   })
 
@@ -35,7 +42,7 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.login(user)
+      cy.login(user1)
     })
 
     it('A blog can be created', function() {
@@ -60,6 +67,13 @@ describe('Blog app', function() {
       cy.contains('show').click()
       cy.contains('remove').click()
       cy.should('not.contain', 'title')
+    })
+
+    it('the remove button is not visible to other users', function() {
+      cy.createBlog({ title: 'title', author: 'author', url: 'url' })
+      cy.login(user2)
+      cy.contains('show').click()
+      cy.contains('remove').should('not.exist')
     })
   })
 })
