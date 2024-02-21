@@ -54,5 +54,12 @@ describe('Blog app', function() {
       cy.contains('like').click()
       cy.contains('likes: 1')
     })
+
+    it('A blog can be deleted by the user who added it', function() {
+      cy.createBlog({ title: 'title', author: 'author', url: 'url' })
+      cy.contains('show').click()
+      cy.contains('remove').click()
+      cy.should('not.contain', 'title')
+    })
   })
 })
