@@ -13,7 +13,7 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
 
   if (!showFull) {
     return (
-      <div style={blogStyle}>
+      <div style={blogStyle} className='blog'>
         <p>
           {blog.title} {blog.author}
           <button onClick={() => setShowFull(true)}>show</button>
@@ -23,11 +23,11 @@ const Blog = ({ blog, user, handleDelete, handleLike }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <button onClick={() => setShowFull(false)}>hide</button>
       <p>{blog.title} {blog.author}</p>
       <p><a href={blog.url}>{blog.url}</a></p>
-      <p>likes {blog.likes} <button onClick={handleLike}>like</button></p>
+      <p>likes: {blog.likes} <button onClick={handleLike}>like</button></p>
       <p>{blog.user.name}</p>
       {user.username === blog.user.username && <button onClick={handleDelete}>remove</button>}
     </div>
