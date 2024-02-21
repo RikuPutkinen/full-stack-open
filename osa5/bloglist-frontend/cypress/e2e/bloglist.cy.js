@@ -7,9 +7,7 @@ const user = {
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/api/testing/reset`)
-
     cy.request('POST', `${Cypress.env('BACKEND')}/api/users`, user)
-
     cy.visit('')
   })
 
@@ -48,6 +46,13 @@ describe('Blog app', function() {
       cy.contains('create').click()
 
       cy.get('.blog').contains('Hello')
+    })
+
+    it('A blog can be liked' , function() {
+      cy.createBlog({ title: 'title', author: 'author', url: 'url' })
+      cy.contains('show').click()
+      cy.contains('like').click()
+      cy.contains('likes: 1')
     })
   })
 })
