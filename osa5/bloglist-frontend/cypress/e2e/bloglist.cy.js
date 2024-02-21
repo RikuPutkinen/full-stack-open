@@ -75,5 +75,20 @@ describe('Blog app', function() {
       cy.contains('show').click()
       cy.contains('remove').should('not.exist')
     })
+
+    it('the blog with the most likes is listed first', function() {
+      cy.createBlog({ title: 'title1', author: 'author1', url: 'url1' })
+      cy.createBlog({ title: 'title2', author: 'author2', url: 'url2' })
+
+      cy.contains('title1').find('button').click()
+      cy.contains('like').click()
+      cy.contains('hide').click()
+
+      cy.contains('title2').find('button').click()
+      cy.contains('like').click().click()
+      cy.contains('hide').click()
+
+      cy.get('.blog').eq(0).contains('title2')
+    })
   })
 })
