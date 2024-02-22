@@ -36,6 +36,8 @@ const reducer = (state = initialState, action) => {
           return anecdote
         }
       })
+    case 'CREATE':
+      return [...state, asObject(action.payload.text)]
     default:
       return state
   }
