@@ -12,9 +12,9 @@ export default function AnecdoteList() {
 
   const dispatch = useDispatch()
 
-  const vote = ({id, content}) => {
-    dispatch(voteAnecdote(id))
-    showNotification(`You voted for ${content}`, dispatch)
+  const vote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote))
+    showNotification(`You voted for ${anecdote.content}`, dispatch)
   }
 
   const sortedAnecdotes = anecdotes.toSorted((a1, a2) => a2.votes - a1.votes)
