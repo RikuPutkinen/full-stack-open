@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux"
 import { createAnecdote } from "../reducers/anecdoteReducer"
-import anecdoteService from '../services/anecdotes'
 import showNotification from "../utils/showNotification"
 
 
@@ -11,8 +10,7 @@ export default function AnecdoteForm() {
     e.preventDefault()
     const anecdote = e.target.anecdote.value
     e.target.anecdote.value = ''
-    const newAnecdote = await anecdoteService.createAnecdote(anecdote)
-    dispatch(createAnecdote(newAnecdote))
+    dispatch(createAnecdote(anecdote))
     showNotification(`Created anecdote ${anecdote}`, dispatch)
   }
 
