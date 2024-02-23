@@ -32,6 +32,4 @@ export default function AnecdoteList() {
       )}
   </div>
   )
-
-
 }
