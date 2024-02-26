@@ -15,8 +15,7 @@ const Notification = () => {
 
   setTimeout(() => {
     dispatch({
-      type: "SET",
-      payload: ""
+      type: "RESET"
     })
   }, 5000)
 
