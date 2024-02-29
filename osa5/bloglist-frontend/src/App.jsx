@@ -1,17 +1,16 @@
 import { useState, useEffect, useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import Blog from './components/Blog'
+import { Routes, Route, useMatch } from 'react-router-dom'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
+import userService from './services/users'
 import login from './services/login'
-import BlogForm from './components/BlogForm'
 import MessageBox from './components/MessageBox'
-import Togglable from './components/Togglable'
 import NotificationContext from './contexts/NotificationContext'
 import UserContext from './contexts/UserContext'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
+import User from './components/User'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -28,17 +27,28 @@ const App = () => {
     }
   }, [])
 
-  const res = useQuery({
+  const blogRes = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
   })
+  const userRes = useQuery({
+    queryKey: ['users'],
+    queryFn: userService.getAll,
+  })
 
-  if (res.isLoading) {
+  const userMatch = useMatch('/users/:id')
+
+  if (blogRes.isLoading || userRes.isLoading) {
     return <div>Loading...</div>
   }
 
-  const blogs = res.data
-  console.log(blogs)
+  const blogs = blogRes.data
+  const users = userRes.data
+
+  const selectedUser = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
+
   const sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes)
 
   async function handleLogin(e) {
@@ -85,7 +95,7 @@ const App = () => {
   }
 
   return (
-    <Router>
+    <>
       <MessageBox />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
@@ -93,9 +103,10 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<BlogList blogs={blogs} />} />
-        <Route path="/users" element={<UserList blogs={blogs} />} />
+        <Route path="/users/:id" element={<User user={selectedUser} />} />
+        <Route path="/users" element={<UserList users={users} />} />
       </Routes>
-    </Router>
+    </>
   )
 }
 

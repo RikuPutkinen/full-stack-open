@@ -1,8 +1,13 @@
-import _ from 'lodash'
+import { Link } from 'react-router-dom'
 
-export default function UserList({ blogs }) {
-  const countedUsers = _.countBy(blogs, 'user.username')
-  console.log(countedUsers)
+export default function UserList({ users }) {
+  const countedUsers = users.map(user => {
+    return {
+      ...user,
+      amountOfBlogs: user.blogs.length,
+    }
+  })
+
   return (
     <>
       <h2>Users</h2>
@@ -14,11 +19,13 @@ export default function UserList({ blogs }) {
               <b>blogs created</b>
             </td>
           </tr>
-          {Object.keys(countedUsers).map(key => {
+          {countedUsers.map(user => {
             return (
-              <tr key={key}>
-                <td>{key}</td>
-                <td>{countedUsers[key]}</td>
+              <tr key={user.id}>
+                <td>
+                  <Link to={`/users/${user.id}`}>{user.username}</Link>
+                </td>
+                <td>{user.amountOfBlogs}</td>
               </tr>
             )
           })}
