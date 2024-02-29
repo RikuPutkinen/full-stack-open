@@ -8,20 +8,21 @@ import BlogForm from './components/BlogForm'
 import MessageBox from './components/MessageBox'
 import Togglable from './components/Togglable'
 import NotificationContext from './contexts/NotificationContext'
+import UserContext from './contexts/UserContext'
 
 const App = () => {
   const [blogFormVisible, setBlogFormVisible] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [notification, dispatchNotification] = useContext(NotificationContext)
+  const [user, dispatchUser] = useContext(UserContext)
 
   useEffect(() => {
     const userJSON = localStorage.getItem('blogUser')
     if (userJSON) {
-      const user = JSON.parse(userJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const localUser = JSON.parse(userJSON)
+      dispatchUser({ type: 'LOG_IN', payload: localUser })
+      blogService.setToken(localUser.token)
     }
   }, [])
 
@@ -43,7 +44,7 @@ const App = () => {
     try {
       const user = await login({ username, password })
 
-      setUser(user)
+      dispatchUser({ type: 'LOG_IN', payload: user })
       setUsername('')
       setPassword('')
 
@@ -60,7 +61,8 @@ const App = () => {
 
   function logOut() {
     localStorage.removeItem('blogUser')
-    setUser(null)
+    blogService.setToken(null)
+    dispatchUser({ type: 'LOG_OUT' })
   }
 
   if (user === null) {

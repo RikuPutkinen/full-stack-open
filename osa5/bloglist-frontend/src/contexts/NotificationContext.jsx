@@ -17,6 +17,8 @@ function notificationReducer(state, action) {
         ...state,
         message: '',
       }
+    default:
+      return state
   }
 }
 
