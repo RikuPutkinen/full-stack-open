@@ -11,6 +11,7 @@ import UserContext from './contexts/UserContext'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
+import BlogView from './components/BlogView'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -36,6 +37,7 @@ const App = () => {
     queryFn: userService.getAll,
   })
 
+  const blogMatch = useMatch('/blogs/:id')
   const userMatch = useMatch('/users/:id')
 
   if (blogRes.isLoading || userRes.isLoading) {
@@ -44,6 +46,10 @@ const App = () => {
 
   const blogs = blogRes.data
   const users = userRes.data
+
+  const selectedBlog = blogMatch
+    ? blogs.find(blog => blog.id === blogMatch.params.id)
+    : null
 
   const selectedUser = userMatch
     ? users.find(user => user.id === userMatch.params.id)
@@ -103,6 +109,7 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<BlogList blogs={blogs} />} />
+        <Route path="/blogs/:id" element={<BlogView blog={selectedBlog} />} />
         <Route path="/users/:id" element={<User user={selectedUser} />} />
         <Route path="/users" element={<UserList users={users} />} />
       </Routes>

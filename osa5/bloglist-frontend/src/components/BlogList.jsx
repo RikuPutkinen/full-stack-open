@@ -7,7 +7,6 @@ import UserContext from '../contexts/UserContext'
 
 export default function BlogList({ blogs }) {
   const [blogFormVisible, setBlogFormVisible] = useState(false)
-  const [user, dispatchUser] = useContext(UserContext)
   return (
     <>
       <Togglable
@@ -18,9 +17,11 @@ export default function BlogList({ blogs }) {
       >
         <BlogForm />
       </Togglable>
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} user={user} />
-      ))}
+      <ul>
+        {blogs.map(blog => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
+      </ul>
     </>
   )
 }
