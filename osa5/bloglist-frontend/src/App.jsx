@@ -63,31 +63,6 @@ const App = () => {
     setUser(null)
   }
 
-  function deleteBlog(blogToRemove) {
-    if (
-      confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
-    ) {
-      blogService.deleteBlog(blogToRemove.id).then(res => {
-        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
-      })
-    }
-  }
-
-  function likeBlog(blogToLike) {
-    console.log('L:', blogToLike.likes)
-    blogService.like(blogToLike).then(res =>
-      setBlogs(
-        blogs.map(blog => {
-          if (blog.id.toString() === blogToLike.id.toString()) {
-            return res
-          } else {
-            return blog
-          }
-        })
-      )
-    )
-  }
-
   if (user === null) {
     return (
       <>
@@ -119,13 +94,7 @@ const App = () => {
         <BlogForm />
       </Togglable>
       {sortedBlogs.map(blog => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          user={user}
-          handleDelete={() => deleteBlog(blog)}
-          handleLike={() => likeBlog(blog)}
-        />
+        <Blog key={blog.id} blog={blog} user={user} />
       ))}
     </div>
   )
