@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
@@ -9,9 +10,10 @@ import MessageBox from './components/MessageBox'
 import Togglable from './components/Togglable'
 import NotificationContext from './contexts/NotificationContext'
 import UserContext from './contexts/UserContext'
+import BlogList from './components/BlogList'
+import UserList from './components/UserList'
 
 const App = () => {
-  const [blogFormVisible, setBlogFormVisible] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [notification, dispatchNotification] = useContext(NotificationContext)
@@ -36,6 +38,7 @@ const App = () => {
   }
 
   const blogs = res.data
+  console.log(blogs)
   const sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes)
 
   async function handleLogin(e) {
@@ -82,23 +85,17 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Router>
       <MessageBox />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={logOut}>Log out</button>
-      <Togglable
-        visible={blogFormVisible}
-        buttonLabel={'new blog'}
-        handleHide={() => setBlogFormVisible(false)}
-        handleShow={() => setBlogFormVisible(true)}
-      >
-        <BlogForm />
-      </Togglable>
-      {sortedBlogs.map(blog => (
-        <Blog key={blog.id} blog={blog} user={user} />
-      ))}
-    </div>
+
+      <Routes>
+        <Route path="/" element={<BlogList blogs={blogs} />} />
+        <Route path="/users" element={<UserList blogs={blogs} />} />
+      </Routes>
+    </Router>
   )
 }
 
