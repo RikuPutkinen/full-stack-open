@@ -1,27 +1,49 @@
-import { useState } from 'react'
-import Proptypes from 'prop-types'
+import { useState, useContext } from 'react'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
+import NotificationContext from '../contexts/NotificationContext'
 
-export default function BlogForm({ createBlog }) {
+import blogService from '../services/blogs'
+
+export default function BlogForm() {
   const [newBlog, setNewBlog] = useState({
     title: '',
     author: '',
-    url: ''
+    url: '',
+  })
+  const [notification, dispatchNotification] = useContext(NotificationContext)
+
+  const queryClient = useQueryClient()
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+      dispatchNotification({
+        type: 'SET_SUCCESS',
+        payload: `A new blog "${newBlog.title}" by ${newBlog.author} added`,
+      })
+    },
+    onError: e => {
+      dispatchNotification({
+        type: 'SET_FAIL',
+        payload: `Error: ${e.response.data.error}`,
+      })
+    },
   })
 
   function handleNewBlogChange(e) {
     setNewBlog({
       ...newBlog,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
   function addBlog(e) {
     e.preventDefault()
-    createBlog(newBlog)
+    newBlogMutation.mutate(newBlog)
     setNewBlog({
       title: '',
       author: '',
-      url: ''
+      url: '',
     })
   }
 
@@ -58,8 +80,4 @@ export default function BlogForm({ createBlog }) {
       <button>create</button>
     </form>
   )
-}
-
-BlogForm.propTypes = {
-  createBlog: Proptypes.func.isRequired
 }

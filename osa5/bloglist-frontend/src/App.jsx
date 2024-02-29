@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
@@ -9,16 +10,11 @@ import Togglable from './components/Togglable'
 import NotificationContext from './contexts/NotificationContext'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [blogFormVisible, setBlogFormVisible] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, dispatchNotification] = useContext(NotificationContext)
-
-  useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs))
-  }, [])
 
   useEffect(() => {
     const userJSON = localStorage.getItem('blogUser')
@@ -29,6 +25,16 @@ const App = () => {
     }
   }, [])
 
+  const res = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+  })
+
+  if (res.isLoading) {
+    return <div>Loading...</div>
+  }
+
+  const blogs = res.data
   const sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes)
 
   async function handleLogin(e) {
@@ -55,24 +61,6 @@ const App = () => {
   function logOut() {
     localStorage.removeItem('blogUser')
     setUser(null)
-  }
-
-  function addBlog(newBlog) {
-    blogService
-      .create(newBlog)
-      .then(res => {
-        dispatchNotification({
-          type: 'SET_SUCCESS',
-          payload: `A new blog "${res.title}" by ${res.author} added`,
-        })
-        setBlogs([...blogs, res])
-        setBlogFormVisible(false)
-      })
-      .catch(e => {
-        const error = e.response.data.error
-        console.error(error)
-        dispatchNotification({ type: 'SET_FAIL', payload: `Error: ${error}` })
-      })
   }
 
   function deleteBlog(blogToRemove) {
@@ -128,7 +116,7 @@ const App = () => {
         handleHide={() => setBlogFormVisible(false)}
         handleShow={() => setBlogFormVisible(true)}
       >
-        <BlogForm createBlog={addBlog} />
+        <BlogForm />
       </Togglable>
       {sortedBlogs.map(blog => (
         <Blog

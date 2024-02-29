@@ -13,7 +13,10 @@ function notificationReducer(state, action) {
         success: false,
       }
     case 'RESET':
-      return ''
+      return {
+        ...state,
+        message: '',
+      }
   }
 }
 

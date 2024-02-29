@@ -1,4 +1,3 @@
-import Proptypes from 'prop-types'
 import { useContext } from 'react'
 import NotificationContext from '../contexts/NotificationContext'
 
