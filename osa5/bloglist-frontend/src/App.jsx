@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
@@ -6,6 +6,7 @@ import login from './services/login'
 import BlogForm from './components/BlogForm'
 import MessageBox from './components/MessageBox'
 import Togglable from './components/Togglable'
+import NotificationContext from './contexts/NotificationContext'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,13 +14,10 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState('')
-  const [success, setSuccess] = useState(true)
+  const [notification, dispatchNotification] = useContext(NotificationContext)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    blogService.getAll().then(blogs => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -45,9 +43,12 @@ const App = () => {
 
       blogService.setToken(user.token)
       localStorage.setItem('blogUser', JSON.stringify(user))
-    } catch(err) {
+    } catch (err) {
       console.log(err)
-      showMessage('Wrong username or password', false)
+      dispatchNotification({
+        type: 'SET_ERR',
+        payload: 'Wrong username or password',
+      })
     }
   }
 
@@ -60,27 +61,34 @@ const App = () => {
     blogService
       .create(newBlog)
       .then(res => {
-        showMessage(`A new blog "${res.title}" by ${res.author} added`, true)
+        dispatchNotification({
+          type: 'SET_SUCCESS',
+          payload: `A new blog "${res.title}" by ${res.author} added`,
+        })
         setBlogs([...blogs, res])
         setBlogFormVisible(false)
+      })
+      .catch(e => {
+        const error = e.response.data.error
+        console.error(error)
+        dispatchNotification({ type: 'SET_FAIL', payload: `Error: ${error}` })
       })
   }
 
   function deleteBlog(blogToRemove) {
-    if (confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)) {
-      blogService
-        .deleteBlog(blogToRemove.id)
-        .then(res => {
-          setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
-        })
+    if (
+      confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
+    ) {
+      blogService.deleteBlog(blogToRemove.id).then(res => {
+        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+      })
     }
   }
 
   function likeBlog(blogToLike) {
     console.log('L:', blogToLike.likes)
-    blogService
-      .like(blogToLike)
-      .then(res => setBlogs(
+    blogService.like(blogToLike).then(res =>
+      setBlogs(
         blogs.map(blog => {
           if (blog.id.toString() === blogToLike.id.toString()) {
             return res
@@ -88,21 +96,14 @@ const App = () => {
             return blog
           }
         })
-      ))
-  }
-
-  function showMessage(message, success) {
-    setMessage(message)
-    setSuccess(success)
-    setTimeout(() => {
-      setMessage('')
-    }, 5000)
+      )
+    )
   }
 
   if (user === null) {
     return (
       <>
-        <MessageBox message={message} success={success} />
+        <MessageBox />
         <h2>Log in</h2>
         <LoginForm
           username={username}
@@ -117,7 +118,7 @@ const App = () => {
 
   return (
     <div>
-      <MessageBox message={message} success={success} />
+      <MessageBox />
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={logOut}>Log out</button>
@@ -127,13 +128,17 @@ const App = () => {
         handleHide={() => setBlogFormVisible(false)}
         handleShow={() => setBlogFormVisible(true)}
       >
-        <BlogForm
-          createBlog={addBlog}
-        />
+        <BlogForm createBlog={addBlog} />
       </Togglable>
-      {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} handleDelete={() => deleteBlog(blog)} handleLike={() => likeBlog(blog)} />
-      )}
+      {sortedBlogs.map(blog => (
+        <Blog
+          key={blog.id}
+          blog={blog}
+          user={user}
+          handleDelete={() => deleteBlog(blog)}
+          handleLike={() => likeBlog(blog)}
+        />
+      ))}
     </div>
   )
 }

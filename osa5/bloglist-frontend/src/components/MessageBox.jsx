@@ -1,16 +1,17 @@
 import Proptypes from 'prop-types'
+import { useContext } from 'react'
+import NotificationContext from '../contexts/NotificationContext'
 
-export default function MessageBox({ message, success }) {
-  if (!message) return null
+export default function MessageBox() {
+  const [notification, dispatchNotification] = useContext(NotificationContext)
+  if (!notification.message) return null
 
+  setTimeout(() => {
+    dispatchNotification({ type: 'RESET' })
+  }, 5000)
   return (
-    <div className={success ? 'success' : 'error'}>
-      <p>{message}</p>
+    <div className={notification.success ? 'success' : 'error'}>
+      <p>{notification.message}</p>
     </div>
   )
-}
-
-MessageBox.propTypes = {
-  message: Proptypes.string.isRequired,
-  success: Proptypes.bool.isRequired
 }
