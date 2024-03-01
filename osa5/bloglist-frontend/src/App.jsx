@@ -12,6 +12,7 @@ import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
 import BlogView from './components/BlogView'
+import NavMenu from './components/NavMenu'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -78,12 +79,6 @@ const App = () => {
     }
   }
 
-  function logOut() {
-    localStorage.removeItem('blogUser')
-    blogService.setToken(null)
-    dispatchUser({ type: 'LOG_OUT' })
-  }
-
   if (user === null) {
     return (
       <>
@@ -102,13 +97,12 @@ const App = () => {
 
   return (
     <>
+      <NavMenu />
       <MessageBox />
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
-      <button onClick={logOut}>Log out</button>
 
       <Routes>
-        <Route path="/" element={<BlogList blogs={blogs} />} />
+        <Route path="/" element={<BlogList blogs={sortedBlogs} />} />
         <Route path="/blogs/:id" element={<BlogView blog={selectedBlog} />} />
         <Route path="/users/:id" element={<User user={selectedUser} />} />
         <Route path="/users" element={<UserList users={users} />} />
