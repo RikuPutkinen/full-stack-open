@@ -53,6 +53,24 @@ blogRouter.post('/',
   }
 )
 
+blogRouter.post('/:id/comments', async (req, res, next) => {
+  const { comment } = req.body
+  let blog = await Blog.findById(req.params.id)
+  blog = blog.toJSON()
+  
+  const blogToUpdate = {
+    ...blog,
+    comments: [...blog.comments, comment]
+  }
+  
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    req.params.id,
+    blogToUpdate,
+    { new: true }
+  )
+  res.json(updatedBlog)
+})
+
 blogRouter.delete('/:id',
   middleware.userExtractor,
   async (request, response, next) => {

@@ -26,6 +26,13 @@ export default function BlogView({ blog }) {
         <button onClick={() => handleLike(blog)}>like</button>
       </p>
       <p>Added by {blog.user.username}</p>
+
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(comment => {
+          return <li key={comment}>{comment}</li>
+        })}
+      </ul>
     </>
   )
 }
