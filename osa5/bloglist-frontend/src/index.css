@@ -12,8 +12,8 @@
   background-color: red;
 }
 
-.no-wrap {
-  text-wrap: nowrap;
+.maxw {
+  min-width: max-content;
 }
 
 .horizontal {
