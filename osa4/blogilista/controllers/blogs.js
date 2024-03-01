@@ -62,13 +62,13 @@ blogRouter.post('/:id/comments', async (req, res, next) => {
     ...blog,
     comments: [...blog.comments, comment]
   }
-  
   const updatedBlog = await Blog.findByIdAndUpdate(
     req.params.id,
     blogToUpdate,
     { new: true }
   )
-  res.json(updatedBlog)
+
+  res.status(201).json(updatedBlog)
 })
 
 blogRouter.delete('/:id',

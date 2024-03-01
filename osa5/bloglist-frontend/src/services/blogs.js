@@ -21,6 +21,12 @@ async function create(newBlog) {
   return res.data
 }
 
+async function createComment(blog, comment) {
+  const { id } = blog
+  const res = await axios.post(`${baseUrl}/${id}/comments`, { comment })
+  return res.data
+}
+
 async function like(blog) {
   const { user, likes, author, title, url } = blog
 
@@ -56,6 +62,7 @@ export default {
   getAll,
   setToken,
   create,
+  createComment,
   like,
   deleteBlog,
 }
