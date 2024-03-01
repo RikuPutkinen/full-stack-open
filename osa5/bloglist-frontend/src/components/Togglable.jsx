@@ -1,28 +1,28 @@
 import Proptypes from 'prop-types'
+import { Button } from 'react-bootstrap'
 
-export default function Togglable(
-  {
-    visible,
-    buttonLabel,
-    handleShow,
-    handleHide,
-    children
-  }) {
+export default function Togglable({
+  visible,
+  buttonLabel,
+  handleShow,
+  handleHide,
+  children,
+}) {
   const hideWhenVisible = {
-    display: visible ? 'none' : ''
+    display: visible ? 'none' : '',
   }
   const showWhenVisible = {
-    display: visible ? '' : 'none'
+    display: visible ? '' : 'none',
   }
 
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={handleShow}>{buttonLabel}</button>
+        <Button onClick={handleShow}>{buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={handleHide}>cancel</button>
+        <Button onClick={handleHide}>cancel</Button>
       </div>
     </div>
   )
@@ -33,5 +33,5 @@ Togglable.propTypes = {
   buttonLabel: Proptypes.string.isRequired,
   handleShow: Proptypes.func.isRequired,
   handleHide: Proptypes.func.isRequired,
-  children: Proptypes.element.isRequired
+  children: Proptypes.element.isRequired,
 }

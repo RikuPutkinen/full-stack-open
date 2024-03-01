@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import blogService from '../services/blogs'
 import BlogCommentForm from './BlogCommentForm'
+import { Button, ListGroup } from 'react-bootstrap'
 
 export default function BlogView({ blog }) {
   const queryClient = useQueryClient()
@@ -16,25 +17,25 @@ export default function BlogView({ blog }) {
   }
   return (
     <>
-      <h2>
+      <h3>
         {blog.title} {blog.author}
-      </h2>
+      </h3>
       <p>
         <a href={blog.url}>{blog.url}</a>
       </p>
       <p>
         {blog.likes} likes{' '}
-        <button onClick={() => handleLike(blog)}>like</button>
+        <Button onClick={() => handleLike(blog)}>like</Button>
       </p>
       <p>Added by {blog.user.username}</p>
 
-      <h3>comments</h3>
+      <h4>comments</h4>
       <BlogCommentForm blog={blog} />
-      <ul>
+      <ListGroup>
         {blog.comments.map(comment => {
-          return <li key={comment}>{comment}</li>
+          return <ListGroup.Item key={comment}>{comment}</ListGroup.Item>
         })}
-      </ul>
+      </ListGroup>
     </>
   )
 }

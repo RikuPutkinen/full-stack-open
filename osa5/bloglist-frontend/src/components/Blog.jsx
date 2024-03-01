@@ -10,11 +10,14 @@ const Blog = ({ blog, user }) => {
     marginBottom: 5,
   }
   return (
-    <li style={blogStyle} className="blog">
-      <Link to={`/blogs/${blog.id}`}>
-        {blog.title} {blog.author}
-      </Link>
-    </li>
+    <tr>
+      <td>
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title} {blog.author}
+        </Link>
+      </td>
+      <td>{blog.author}</td>
+    </tr>
   )
 }
 

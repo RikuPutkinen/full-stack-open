@@ -1,3 +1,4 @@
+import { Button, Form } from 'react-bootstrap'
 import { useState } from 'react'
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query'
 
@@ -24,9 +25,13 @@ export default function BlogCommentForm({ blog }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input value={comment} onChange={e => setComment(e.target.value)} />
-      <button type="submit">add comment</button>
-    </form>
+    <Form onSubmit={handleSubmit} className="horizontal">
+      <Form.Control
+        type="text"
+        value={comment}
+        onChange={e => setComment(e.target.value)}
+      />
+      <Button type="submit">add comment</Button>
+    </Form>
   )
 }

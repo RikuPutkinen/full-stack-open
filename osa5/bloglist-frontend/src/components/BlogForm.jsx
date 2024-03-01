@@ -1,3 +1,4 @@
+import { Form, Button } from 'react-bootstrap'
 import { useState, useContext } from 'react'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import NotificationContext from '../contexts/NotificationContext'
@@ -48,36 +49,39 @@ export default function BlogForm() {
   }
 
   return (
-    <form onSubmit={addBlog}>
+    <Form onSubmit={addBlog}>
       <h3>Create new</h3>
-      <div>
-        <label htmlFor="title">title:</label>
-        <input
+      <Form.Group>
+        <Form.Label htmlFor="title">title:</Form.Label>
+        <Form.Control
+          type="text"
           id="title"
           name="title"
           value={newBlog.title}
           onChange={handleNewBlogChange}
         />
-      </div>
-      <div>
-        <label htmlFor="author">author:</label>
-        <input
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="author">author:</Form.Label>
+        <Form.Control
+          type="text"
           id="author"
           name="author"
           value={newBlog.author}
           onChange={handleNewBlogChange}
         />
-      </div>
-      <div>
-        <label htmlFor="url">url:</label>
-        <input
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="url">url:</Form.Label>
+        <Form.Control
+          type="text"
           id="url"
           name="url"
           value={newBlog.url}
           onChange={handleNewBlogChange}
         />
-      </div>
-      <button>create</button>
-    </form>
+      </Form.Group>
+      <Button>create</Button>
+    </Form>
   )
 }

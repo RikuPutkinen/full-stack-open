@@ -81,7 +81,7 @@ const App = () => {
 
   if (user === null) {
     return (
-      <>
+      <div className="container">
         <MessageBox />
         <h2>Log in</h2>
         <LoginForm
@@ -91,12 +91,12 @@ const App = () => {
           setPassword={setPassword}
           handleSubmit={handleLogin}
         />
-      </>
+      </div>
     )
   }
 
   return (
-    <>
+    <div className="container">
       <NavMenu />
       <MessageBox />
       <h2>blogs</h2>
@@ -107,7 +107,7 @@ const App = () => {
         <Route path="/users/:id" element={<User user={selectedUser} />} />
         <Route path="/users" element={<UserList users={users} />} />
       </Routes>
-    </>
+    </div>
   )
 }
 

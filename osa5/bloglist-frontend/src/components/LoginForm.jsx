@@ -1,32 +1,37 @@
 import Proptypes from 'prop-types'
+import { Button, Form } from 'react-bootstrap'
 
-export default function LoginForm(
-  {
-    username,
-    setUsername,
-    password,
-    setPassword,
-    handleSubmit
-  }) {
+export default function LoginForm({
+  username,
+  setUsername,
+  password,
+  setPassword,
+  handleSubmit,
+}) {
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="username">username</label>
-        <input
+    <Form onSubmit={handleSubmit}>
+      <Form.Group>
+        <Form.Label htmlFor="username">username</Form.Label>
+        <Form.Control
+          type="text"
           id="username"
           value={username}
-          onChange={({ target }) => setUsername(target.value)}/>
-      </div>
-      <div>
-        <label htmlFor="password">password</label>
-        <input
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="password">password</Form.Label>
+        <Form.Control
           id="password"
           type="password"
           value={password}
-          onChange={({ target }) => setPassword(target.value)}/>
-      </div>
-      <button id='login-button' type="submit">login</button>
-    </form>
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </Form.Group>
+      <Button id="login-button" type="submit">
+        login
+      </Button>
+    </Form>
   )
 }
 
@@ -35,5 +40,5 @@ LoginForm.propTypes = {
   setUsername: Proptypes.func.isRequired,
   password: Proptypes.string.isRequired,
   setPassword: Proptypes.func.isRequired,
-  handleSubmit: Proptypes.func.isRequired
+  handleSubmit: Proptypes.func.isRequired,
 }

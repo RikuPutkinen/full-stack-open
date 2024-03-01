@@ -1,3 +1,4 @@
+import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 export default function UserList({ users }) {
@@ -11,7 +12,7 @@ export default function UserList({ users }) {
   return (
     <>
       <h2>Users</h2>
-      <table>
+      <Table striped>
         <thead>
           <tr>
             <td></td>
@@ -19,6 +20,8 @@ export default function UserList({ users }) {
               <b>blogs created</b>
             </td>
           </tr>
+        </thead>
+        <tbody>
           {countedUsers.map(user => {
             return (
               <tr key={user.id}>
@@ -29,8 +32,8 @@ export default function UserList({ users }) {
               </tr>
             )
           })}
-        </thead>
-      </table>
+        </tbody>
+      </Table>
     </>
   )
 }

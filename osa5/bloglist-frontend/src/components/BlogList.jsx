@@ -3,7 +3,7 @@ import { useState, useContext } from 'react'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import Blog from './Blog'
-import UserContext from '../contexts/UserContext'
+import { Table } from 'react-bootstrap'
 
 export default function BlogList({ blogs }) {
   const [blogFormVisible, setBlogFormVisible] = useState(false)
@@ -17,11 +17,20 @@ export default function BlogList({ blogs }) {
       >
         <BlogForm />
       </Togglable>
-      <ul>
-        {blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </ul>
+
+      <Table striped>
+        <thead>
+          <tr>
+            <td>title</td>
+            <td>author</td>
+          </tr>
+        </thead>
+        <tbody>
+          {blogs.map(blog => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </tbody>
+      </Table>
     </>
   )
 }

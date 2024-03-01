@@ -1,3 +1,4 @@
+import { Button, Container, Nav, Navbar } from 'react-bootstrap'
 import { useContext } from 'react'
 import blogService from '../services/blogs'
 import UserContext from '../contexts/UserContext'
@@ -12,21 +13,21 @@ export default function NavMenu() {
     dispatchUser({ type: 'LOG_OUT' })
   }
   return (
-    <nav>
-      <ul>
-        <li>
+    <Navbar>
+      <Nav>
+        <Nav.Link>
           <Link to={'/'}>blogs</Link>
-        </li>
-        <li>
+        </Nav.Link>
+        <Nav.Link>
           <Link to={'/users'}>users</Link>
-        </li>
-        <li>
+        </Nav.Link>
+        <Navbar.Text className="no-wrap">
           <p>{user.name} logged in</p>
-        </li>
-        <li>
-          <button onClick={logOut}>Log out</button>
-        </li>
-      </ul>
-    </nav>
+        </Navbar.Text>
+        <Container>
+          <Button onClick={logOut}>Log out</Button>
+        </Container>
+      </Nav>
+    </Navbar>
   )
 }

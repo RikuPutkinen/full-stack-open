@@ -12,13 +12,13 @@
   background-color: red;
 }
 
-nav > ul {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.no-wrap {
+  text-wrap: nowrap;
 }
 
-nav {
-  background-color: gray;
+.horizontal {
+  display: flex;
+  > * {
+    min-width: max-content;
+  }
 }
