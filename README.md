@@ -4,6 +4,8 @@ Course page: <https://fullstackopen.com/>
 
 My solutions to the Full Stack Open course exercises.
 
+Part 3 is in a separate repository: <https://github.com/RikuPutkinen/full-stack-open-puhelinluettelon-backend>
+
 ## How to run
 Example, change the exercise directory to the directory you want to run
 ```
