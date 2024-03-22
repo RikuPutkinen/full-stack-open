@@ -21,8 +21,8 @@ export default function NavMenu() {
         <Nav.Link>
           <Link to={'/users'}>users</Link>
         </Nav.Link>
-        <Navbar.Text className="no-wrap">
-          <p>{user.name} logged in</p>
+        <Navbar.Text>
+          <p className="maxw">{user.name} logged in</p>
         </Navbar.Text>
         <Container>
           <Button onClick={logOut}>Log out</Button>

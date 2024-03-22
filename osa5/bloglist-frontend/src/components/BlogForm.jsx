@@ -81,7 +81,7 @@ export default function BlogForm() {
           onChange={handleNewBlogChange}
         />
       </Form.Group>
-      <Button>create</Button>
+      <Button type="submit">create</Button>
     </Form>
   )
 }
